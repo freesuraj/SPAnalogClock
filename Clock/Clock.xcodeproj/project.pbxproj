@@ -22,6 +22,7 @@
 		90B5A31E199F713000676FF1 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 90B5A2FD199F713000676FF1 /* UIKit.framework */; };
 		90B5A326199F713000676FF1 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 90B5A324199F713000676FF1 /* InfoPlist.strings */; };
 		90B5A328199F713000676FF1 /* ClockTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 90B5A327199F713000676FF1 /* ClockTests.m */; };
+		90B5A334199F73A000676FF1 /* SPClockView.m in Sources */ = {isa = PBXBuildFile; fileRef = 90B5A333199F73A000676FF1 /* SPClockView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -55,6 +56,8 @@
 		90B5A323199F713000676FF1 /* ClockTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "ClockTests-Info.plist"; sourceTree = "<group>"; };
 		90B5A325199F713000676FF1 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		90B5A327199F713000676FF1 /* ClockTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ClockTests.m; sourceTree = "<group>"; };
+		90B5A332199F73A000676FF1 /* SPClockView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPClockView.h; sourceTree = "<group>"; };
+		90B5A333199F73A000676FF1 /* SPClockView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPClockView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +117,7 @@
 		90B5A2FF199F713000676FF1 /* Clock */ = {
 			isa = PBXGroup;
 			children = (
+				90B5A331199F734000676FF1 /* Clock-Source */,
 				90B5A308199F713000676FF1 /* SPAppDelegate.h */,
 				90B5A309199F713000676FF1 /* SPAppDelegate.m */,
 				90B5A30B199F713000676FF1 /* Main_iPhone.storyboard */,
@@ -153,6 +157,15 @@
 				90B5A324199F713000676FF1 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		90B5A331199F734000676FF1 /* Clock-Source */ = {
+			isa = PBXGroup;
+			children = (
+				90B5A332199F73A000676FF1 /* SPClockView.h */,
+				90B5A333199F73A000676FF1 /* SPClockView.m */,
+			);
+			path = "Clock-Source";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -256,6 +269,7 @@
 			files = (
 				90B5A306199F713000676FF1 /* main.m in Sources */,
 				90B5A313199F713000676FF1 /* SPViewController.m in Sources */,
+				90B5A334199F73A000676FF1 /* SPClockView.m in Sources */,
 				90B5A30A199F713000676FF1 /* SPAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -471,6 +485,7 @@
 				90B5A32D199F713000676FF1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		90B5A32E199F713000676FF1 /* Build configuration list for PBXNativeTarget "ClockTests" */ = {
 			isa = XCConfigurationList;
@@ -479,6 +494,7 @@
 				90B5A330199F713000676FF1 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

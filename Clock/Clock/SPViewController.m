@@ -7,8 +7,11 @@
 //
 
 #import "SPViewController.h"
+#import "SPClockView.h"
 
 @interface SPViewController ()
+
+@property (nonatomic, strong) SPClockView *clockView;
 
 @end
 
@@ -17,7 +20,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view, typically from a nib.
+    self.view.backgroundColor = [UIColor greenColor];
+	_clockView = [[SPClockView alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
+    [self.view addSubview:_clockView];
+    _clockView.center = self.view.center;
 }
 
 - (void)didReceiveMemoryWarning
