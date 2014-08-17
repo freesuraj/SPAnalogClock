@@ -10,4 +10,6 @@
 
 @interface SPClockView : UIView
 
+@property (strong,nonatomic) NSTimeZone *timeZone;
+
 @end

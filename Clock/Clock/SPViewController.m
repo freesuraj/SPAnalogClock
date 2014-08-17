@@ -9,21 +9,46 @@
 #import "SPViewController.h"
 #import "SPClockView.h"
 
-@interface SPViewController ()
+#define clockViewTag        12345
+#define clockLabelTag       23456
 
+@interface SPViewController ()<UITableViewDataSource, UITableViewDelegate>
+
+@property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) SPClockView *clockView;
+@property (nonatomic, strong) NSMutableArray *timeZones;
+@property (nonatomic, strong) NSArray *allTimeZones;
+
+@property (nonatomic, strong) UITableViewController *timeZoneTableViewVC;
 
 @end
 
 @implementation SPViewController
 
+- (void)loadView
+{
+    [super loadView];
+    self.tableView = [[UITableView alloc] initWithFrame:self.view.frame];
+    self.tableView.dataSource = self;
+    self.tableView.delegate = self;
+    [self.view addSubview:self.tableView];
+    _timeZones = [NSMutableArray new];
+    // add current time zone
+    [_timeZones addObject:[NSTimeZone localTimeZone]];
+    
+    self.timeZoneTableViewVC = [[UITableViewController alloc] initWithStyle:UITableViewStylePlain];
+    self.timeZoneTableViewVC.tableView.dataSource = self;
+    self.timeZoneTableViewVC.tableView.delegate = self;
+    _allTimeZones = [NSTimeZone knownTimeZoneNames];
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     self.view.backgroundColor = [UIColor greenColor];
-	_clockView = [[SPClockView alloc] initWithFrame:CGRectMake(0, 0, 200, 200)];
-    [self.view addSubview:_clockView];
-    _clockView.center = self.view.center;
+    self.title = @"SPClockView";
+    _tableView.contentInset = UIEdgeInsetsMake(120, 0, 0, 0);
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(addTimeZone:)];
 }
 
 - (void)didReceiveMemoryWarning
@@ -31,5 +56,93 @@
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
+
+//============================================================================
+#pragma mark - UI Action
+//============================================================================
+- (void)addTimeZone:(UIBarButtonItem *)sender{
+    if ( UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad )
+    {
+        UIPopoverController *popVC = [[UIPopoverController alloc] initWithContentViewController:_timeZoneTableViewVC];
+        [popVC presentPopoverFromBarButtonItem:sender permittedArrowDirections:UIPopoverArrowDirectionAny animated:YES];
+    }
+    else {
+        [self presentViewController:_timeZoneTableViewVC animated:YES completion:^{
+        }];
+    }
+    [_timeZoneTableViewVC.tableView reloadData];
+}
+
+//============================================================================
+#pragma mark - UITableViewDataSource, UITableViewDelegate
+//============================================================================
+
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return 1;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return ([tableView isEqual:_tableView]) ? _timeZones.count : _allTimeZones.count;
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    if([tableView isEqual:_tableView]){
+        NSString *CellIdentifier = @"ClockCellIdentifier";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if(!cell){
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+            cell.selectionStyle = UITableViewCellSelectionStyleNone;
+            SPClockView *clockView = [[SPClockView alloc] initWithFrame:CGRectMake(0, 0, 140, 140)];
+            [cell.contentView addSubview:clockView];
+            clockView.tag = clockViewTag;
+            UILabel *name = [[UILabel alloc] initWithFrame:CGRectMake(0, cell.contentView.frame.size.height - 50, cell.contentView.frame.size.width, 40)];
+            name.backgroundColor = [UIColor clearColor];
+            name.textAlignment = NSTextAlignmentCenter;
+            name.tag = clockLabelTag;
+            [cell.contentView addSubview:name];
+            
+        }
+        NSTimeZone *tz = [self.timeZones objectAtIndex:indexPath.row];
+        SPClockView *clockView = (SPClockView *)[cell.contentView viewWithTag:clockViewTag];
+        UILabel *clockNameLabel = (UILabel *)[cell.contentView viewWithTag:clockLabelTag];
+        if(clockView && [clockView isKindOfClass:[SPClockView class]]){
+            [clockView setTimeZone:tz];
+            clockView.frame = CGRectMake(40, 0, clockView.frame.size.width, clockView.frame.size.width);
+        }
+        if([clockNameLabel isKindOfClass:[UILabel class]]){
+            clockNameLabel.text = tz.name;
+            clockNameLabel.frame = CGRectMake(0, 140, cell.contentView.frame.size.width, 40);
+        }
+        
+        return cell;
+    }
+    else {
+        NSString *CellIdentifier = @"TimeZoneCellIdentifier";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        if(!cell){
+            cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:CellIdentifier];
+        }
+        cell.textLabel.text = [self.allTimeZones objectAtIndex:indexPath.row];
+        return cell;
+    }
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return ([tableView isEqual:_tableView]) ? 190.0 : 44;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if([tableView isEqual:_tableView]){
+        
+    }
+    else {
+        NSString *tzStr = [self.allTimeZones objectAtIndex:indexPath.row];
+        [self.timeZones addObject:[NSTimeZone timeZoneWithName:tzStr]];
+        [_tableView reloadData];
+        [_timeZoneTableViewVC dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
 
 @end
