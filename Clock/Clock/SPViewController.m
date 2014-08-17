@@ -11,6 +11,9 @@
 
 #define clockViewTag        12345
 #define clockLabelTag       23456
+#define digitalClockTag     34567
+#define xPadding             20
+#define yPadding             10
 
 @interface SPViewController ()<UITableViewDataSource, UITableViewDelegate>
 
@@ -101,17 +104,25 @@
             name.tag = clockLabelTag;
             [cell.contentView addSubview:name];
             
+            SPDigitalClock *digitalClock = [[SPDigitalClock alloc] initWithFrame:CGRectMake(0, 0, cell.contentView.frame.size.width, 50)];
+            digitalClock.tag = digitalClockTag;
+            [cell.contentView addSubview:digitalClock];
         }
         NSTimeZone *tz = [self.timeZones objectAtIndex:indexPath.row];
         SPClockView *clockView = (SPClockView *)[cell.contentView viewWithTag:clockViewTag];
         UILabel *clockNameLabel = (UILabel *)[cell.contentView viewWithTag:clockLabelTag];
-        if(clockView && [clockView isKindOfClass:[SPClockView class]]){
-            [clockView setTimeZone:tz];
-            clockView.frame = CGRectMake(40, 0, clockView.frame.size.width, clockView.frame.size.width);
-        }
+        SPDigitalClock *digitalClock = (SPDigitalClock *)[cell.contentView viewWithTag:digitalClockTag];
         if([clockNameLabel isKindOfClass:[UILabel class]]){
             clockNameLabel.text = tz.name;
-            clockNameLabel.frame = CGRectMake(0, 140, cell.contentView.frame.size.width, 40);
+            clockNameLabel.frame = CGRectMake(0, 0, cell.contentView.frame.size.width, 20);
+        }
+        if(clockView && [clockView isKindOfClass:[SPClockView class]]){
+            [clockView setTimeZone:tz];
+            clockView.frame = CGRectMake(CGRectGetMidX(cell.contentView.frame)-CGRectGetWidth(clockView.frame)/2, CGRectGetMaxY(clockNameLabel.frame)+yPadding, clockView.frame.size.width, clockView.frame.size.width);
+        }
+        if(digitalClock && [digitalClock isKindOfClass:[SPDigitalClock class]]){
+            [digitalClock setTimeZone:tz];
+            digitalClock.frame = CGRectMake(0, CGRectGetMaxY(clockView.frame)+yPadding, cell.contentView.frame.size.width, 30);
         }
         
         return cell;
@@ -128,19 +139,29 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return ([tableView isEqual:_tableView]) ? 190.0 : 44;
+    return ([tableView isEqual:_tableView]) ? 220.0 : 44;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if([tableView isEqual:_tableView]){
-        
+        [tableView deselectRowAtIndexPath:indexPath animated:YES];
     }
     else {
         NSString *tzStr = [self.allTimeZones objectAtIndex:indexPath.row];
         [self.timeZones addObject:[NSTimeZone timeZoneWithName:tzStr]];
         [_tableView reloadData];
         [_timeZoneTableViewVC dismissViewControllerAnimated:YES completion:nil];
+    }
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    if([tableView isEqual:_tableView]){
+         NSTimeZone *tz = [self.timeZones objectAtIndex:indexPath.row];
+        [self.timeZones removeObject:tz];
+        [_tableView beginUpdates];
+        [_tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationAutomatic];
+        [_tableView endUpdates];
     }
 }
 

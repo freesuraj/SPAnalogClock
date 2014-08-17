@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@interface SPDigitalClock : UILabel
+@property (strong,nonatomic) NSTimeZone *timeZone;
+@end
+
 @interface SPClockView : UIView
 
 @property (strong,nonatomic) NSTimeZone *timeZone;

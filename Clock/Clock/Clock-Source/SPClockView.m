@@ -15,6 +15,56 @@
 #define graduationWidth     1.0
 #define digitOffset         0
 
+@interface SPDigitalClock()
+
+@property (assign, nonatomic) NSDate *time;
+@property(assign,nonatomic) NSInteger seconds;
+@property(assign,nonatomic) NSInteger minutes;
+@property(assign,nonatomic) NSInteger hours;
+
+@end
+
+@implementation SPDigitalClock
+
+- (id)initWithFrame:(CGRect)frame{
+    self = [super initWithFrame:frame];
+    self.backgroundColor = [UIColor clearColor];
+    self.font = [UIFont boldSystemFontOfSize:20.0];
+    self.textColor = [UIColor redColor];
+    self.textAlignment = NSTextAlignmentCenter;
+    
+    return self;
+}
+
+
+- (void)timerFired:(id)sender
+{
+    _time = [NSDate date];
+    static NSCalendar *gregorian;
+    
+    if (!gregorian) gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    [gregorian setTimeZone:_timeZone]; // Japan
+    NSDateComponents *weekdayComponents =
+    [gregorian components:(NSDayCalendarUnit | NSWeekdayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit) fromDate:_time];
+    
+    self.hours = [weekdayComponents hour];
+    self.minutes = [weekdayComponents minute];
+    self.seconds = [weekdayComponents second];
+    
+    self.text = [NSString stringWithFormat:@"%ld:%ld:%ld",(long)self.hours,(long)self.minutes,(long)self.seconds];
+    
+}
+
+- (void)setTimeZone:(NSTimeZone *)timeZone
+{
+    _timeZone = timeZone;
+    CADisplayLink *animationTimer = [CADisplayLink displayLinkWithTarget:self selector:@selector(timerFired:)];
+	animationTimer.frameInterval = 8.0;
+	[animationTimer addToRunLoop:[NSRunLoop currentRunLoop] forMode:NSRunLoopCommonModes];
+}
+
+@end
+
 @interface SPClockView()
 
 @property (assign, nonatomic) NSDate *time;
