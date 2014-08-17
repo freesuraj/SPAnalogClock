@@ -17,4 +17,4 @@ Clock-iOS
 2. After adding the `SPClockView` into your parent view, set its `time zone` by calling `setTimeZone:` method.
 
 ### Contact
-Feel free to add bug list or contact me at <freesuraj@gmail.com> or <http://www.twitter.com/freesuraj> !!
+This is a quickly made project so could have few bugs. Feel free to add bug list or contact me at <freesuraj@gmail.com> or <http://www.twitter.com/freesuraj> !!
