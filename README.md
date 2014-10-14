@@ -14,6 +14,12 @@ Clock-iOS
 6. Digital clock to display the name in format: `HH:mm:ss`
 
 ### How to use
+
+### CocoaPods
+	Pod 'SPClockView'
+	
+### Manual
+
 1. Import the files `SPClockView.h` and `SPClockView.m` into your projects.
 2. After adding the `SPClockView` into your parent view, set its `time zone` by calling `setTimeZone:` method.
 3. Digital clock `SPDigitalClock` is a subclass of `UILabel`, and is implemented inside the `SPClockView` class. To set the digital time also call the method `setTimeZone:` on `SPDigitalClock`.
@@ -27,7 +33,7 @@ Clock-iOS
 		
 2. `SPDigitalClock`
 			
-		SPDigitalClock *digClock = [[SPClockView alloc] initWithFrame:CGRectMake(0, 0, 140, 140)];
+		SPDigitalClock *digClock = [[SPDigitalClock alloc] initWithFrame:CGRectMake(0, 0, 140, 140)];
 		
 		[digClock setTimeZone:[NSTimeZone timeZoneWithAbbreviation:@"EDT"]]; // New York
 
