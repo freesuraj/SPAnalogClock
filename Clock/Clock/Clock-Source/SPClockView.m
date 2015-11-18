@@ -224,7 +224,9 @@
 
 - (void)timerFired:(id)sender
 {
-    _time = [NSDate date];
+//    _time = [NSDate date];
+    NSDate * newtime = [NSDate date]; //here was an error when I was triying to use only the analog Clock
+
     static NSCalendar *gregorian;
     
     if (!gregorian) gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
