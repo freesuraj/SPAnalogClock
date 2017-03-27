@@ -231,8 +231,10 @@
     
     if (!gregorian) gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     [gregorian setTimeZone:_timeZone]; // Japan
-    NSDateComponents *weekdayComponents =
-    [gregorian components:(NSDayCalendarUnit | NSWeekdayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit | NSSecondCalendarUnit) fromDate:_time];
+	
+    //	Update Deprecated Method
+    //	Fix crash (deallocated _time variable)
+    NSDateComponents *weekdayComponents = [gregorian components:(NSCalendarUnitDay | NSCalendarUnitWeekday | NSCalendarUnitHour | NSCalendarUnitMinute | NSCalendarUnitSecond) fromDate:[NSDate date]];
     
     self.hours = [weekdayComponents hour];
     BOOL isDay = (self.hours > 6 && self.hours < 18);
